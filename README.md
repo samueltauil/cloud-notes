@@ -1,7 +1,7 @@
 Cloud Notes
 =====
 
-# VirtualBox local access
+## VirtualBox local access
 VirtualBox, VM's Network panel, click on advanced, click on Port Forwarding button. In there set up a rule:
 
 ```
@@ -15,4 +15,12 @@ Then enable ssh in the guest, and connect from the host using:
 
 ```
 $ ssh -p 2222 root@127.0.0.1
+```
+
+## Vim line numbers
+
+Create the file on `~/.vimrc` and add:
+
+```
+set nu
 ```
