@@ -24,3 +24,11 @@ Create the file on `~/.vimrc` and add:
 ```
 set nu
 ```
+
+## OpenShift admin login
+
+To login as administrator:
+     
+```
+$ oc login -u system:admin
+```
