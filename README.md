@@ -13,4 +13,6 @@ Guest Port: 22
 
 Then enable ssh in the guest, and connect from the host using:
 
-ssh -p 2222 root@127.0.0.1
+```
+$ ssh -p 2222 root@127.0.0.1
+```
