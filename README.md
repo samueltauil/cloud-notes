@@ -32,3 +32,12 @@ To login as administrator:
 ```
 $ oc login -u system:admin
 ```
+
+## Change the DHCP config for NAT network on VirtualBox
+
+To change the range and ip, create the NAT network first and then adjust the values as needed:
+
+```
+$ VBoxManage dhcpserver modify --netname NatNetwork --ip 10.2.2.100 --netmask 255.255.255.0 --lowerip 10.2.2.101 --upperip 10.2.2.254 --enable
+```
+
