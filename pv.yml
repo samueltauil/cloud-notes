@@ -1,0 +1,26 @@
+apiVersion: v1
+kind: PersistentVolume
+metadata:
+  creationTimestamp: 2016-07-26T21:21:04Z
+  name: vol5-pv
+  resourceVersion: "12681"
+  selfLink: /api/v1/persistentvolumes/vol5-pv
+  uid: dbe2bff5-5376-11e6-b759-2cc26018a0c2
+spec:
+  accessModes:
+  - ReadWriteOnce
+  capacity:
+    storage: 1Gi
+  claimRef:
+    apiVersion: v1
+    kind: PersistentVolumeClaim
+    name: gogs
+    namespace: ci
+    resourceVersion: "12676"
+    uid: 6847d982-5379-11e6-b759-2cc26018a0c2
+  nfs:
+    path: /var/export/vol5
+    server: workstation.example.com
+  persistentVolumeReclaimPolicy: Retain
+status:
+  phase: Bound

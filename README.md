@@ -25,6 +25,12 @@ Create the file on `~/.vimrc` and add:
 set nu
 ```
 
+## Give run as root permission
+
+```
+oadm policy add-scc-to-user anyuid -z default
+```
+
 ## OpenShift admin login
 
 To login as administrator:
@@ -39,5 +45,51 @@ To change the range and ip, create the NAT network first and then adjust the val
 
 ```
 $ VBoxManage dhcpserver modify --netname NatNetwork --ip 10.2.2.100 --netmask 255.255.255.0 --lowerip 10.2.2.101 --upperip 10.2.2.254 --enable
+```
+
+## Docker login to push images in the registry
+
+To log in to the registry directly:
+
+Ensure you are logged in to OpenShift as a regular user:
+
+```
+$ oc login
+```
+Get your access token:
+
+```
+$ oc whoami -t
+```
+
+Give Cluster Admin role to a user:
+
+```
+$ oadm policy add-cluster-role-to-user cluster-admin <user_name>
+```
+
+Log in to the Docker registry:
+
+```
+$ docker login -u <username> -e <any_email_address> \
+    -p <token_value> <registry_ip>:<port>
+```
+
+Check weather forecast by command line:
+
+```
+$ curl wttr.in/<city_name>
+```
+
+Create htpasswd user:
+
+```
+$ htpasswd -b /etc/origin/openshift-passwd demo demo
+```
+
+Debug containers:
+
+```
+$ oc run rheltest --image=registry.access.redhat.com/rhel7/rhel-tools --restart=Never --attach -i --tty
 ```
 

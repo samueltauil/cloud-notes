@@ -1,0 +1,85 @@
+# Create an OSEv3 group that contains the masters and nodes groups
+[OSEv3:children]
+masters
+nodes
+nfs
+
+# Set variables common for all OSEv3 hosts
+[OSEv3:vars]
+# SSH user, this user should allow ssh based auth without requiring a password
+ansible_ssh_user=root
+
+# If ansible_ssh_user is not root, ansible_sudo must be set to true
+#ansible_sudo=true
+#ansible_become=yes
+
+deployment_type=openshift-enterprise
+openshift_master_default_subdomain=osv3poc.secureworkslab.net
+
+# Enable cockpit
+osm_use_cockpit=true
+## Set cockpit plugins
+osm_cockpit_plugins=['cockpit-kubernetes']
+
+osm_default_node_selector="region=primary"
+openshift_hosted_router_selector='region=infra'
+openshift_hosted_registry_selector='region=infra'
+
+openshift_docker_insecure_registries=172.30.0.0/16
+
+# Global Proxy Configuration
+# These options configure HTTP_PROXY, HTTPS_PROXY, and NOPROXY environment
+# variables for docker and master services.
+openshift_http_proxy=http://USER:PASSWORD@IPADDR:PORT
+openshift_https_proxy=https://USER:PASSWORD@IPADDR:PORT
+openshift_no_proxy='.hosts.example.com,some-host.com'
+
+#registry nfs
+openshift_hosted_registry_storage_kind=nfs
+openshift_hosted_registry_storage_access_modes=['ReadWriteMany']
+openshift_hosted_registry_storage_nfs_directory=/
+openshift_hosted_registry_storage_nfs_options='*(rw,root_squash)'
+openshift_hosted_registry_storage_volume_name=registry
+openshift_hosted_registry_storage_volume_size=20Gi
+
+
+# Metrics
+openshift_hosted_metrics_deploy=true
+openshift_hosted_metrics_storage_kind=nfs
+openshift_hosted_metrics_storage_access_modes=['ReadWriteOnce']
+openshift_hosted_metrics_storage_nfs_directory=/exports
+openshift_hosted_metrics_storage_nfs_options='*(rw,root_squash)'
+openshift_hosted_metrics_storage_volume_name=metrics
+openshift_hosted_metrics_storage_volume_size=50Gi
+
+
+# Logging
+openshift_hosted_logging_deploy=true
+openshift_hosted_logging_storage_kind=nfs
+openshift_hosted_logging_storage_access_modes=['ReadWriteOnce']
+openshift_hosted_logging_storage_nfs_directory=/exports
+openshift_hosted_logging_storage_nfs_options='*(rw,root_squash)'
+openshift_hosted_logging_storage_volume_name=logging
+openshift_hosted_logging_storage_volume_size=10Gi
+openshift_master_logging_public_url=https://kibana.osv3poc.secureworkslab.net
+openshift_hosted_logging_deployer_version=v3.4
+
+
+# uncomment the following to enable htpasswd authentication; defaults to DenyAllPasswordIdentityProvider
+openshift_master_identity_providers=[{'name': 'htpasswd_auth', 'login': 'true', 'challenge': 'true', 'kind': 'HTPasswdPasswordIdentityProvider', 'filename': '/etc/openshift/openshift-passwd'}]
+
+# host group for masters
+[masters]
+10.248.28.51 openshift_public_hostname=x-atl1osemaster01.internal.secureworkslab.net openshift_ip=10.248.28.51 openshift_public_ip=10.248.28.51 openshift_hostname=x-atl1osemaster01.internal.secureworkslab.net
+
+# nfs group
+[nfs]
+10.248.28.51 openshift_public_hostname=x-atl1osemaster01.internal.secureworkslab.net openshift_ip=10.248.28.51 openshift_public_ip=10.248.28.51 openshift_hostname=x-atl1osemaster01.internal.secureworkslab.net
+
+# host group for nodes, includes region info
+[nodes]
+10.248.28.51 openshift_public_hostname=x-atl1osemaster01.internal.secureworkslab.net openshift_ip=10.248.28.51 openshift_public_ip=10.248.28.51 openshift_hostname=x-atl1osemaster01.internal.secureworkslab.net openshift_scheduleable=true openshift_node_labels="{'region': 'infra', 'zone': 'default'}"
+10.248.28.52 openshift_public_hostname=x-atl1osenode01.internal.secureworkslab.net openshift_ip=10.248.28.52 openshift_public_ip=10.248.28.52 openshift_hostname=x-atl1osenode01.internal.secureworkslab.net openshift_node_labels="{'region': 'primary', 'zone': 'default'}"
+10.248.28.53 openshift_public_hostname=x-atl1osenode02.internal.secureworkslab.net openshift_ip=10.248.28.53 openshift_public_ip=10.248.28.53 openshift_hostname=x-atl1osenode02.internal.secureworkslab.net openshift_node_labels="{'region': 'primary', 'zone': 'default'}"
+10.248.28.54 openshift_public_hostname=x-atl1osenode03.internal.secureworkslab.net openshift_ip=10.248.28.54 openshift_public_ip=10.248.28.54 openshift_hostname=x-atl1osenode03.internal.secureworkslab.net openshift_node_labels="{'region': 'primary', 'zone': 'default'}"
+

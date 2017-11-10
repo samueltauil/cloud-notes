@@ -1,0 +1,30 @@
+BitBucket
+----------
+https://docs.openshift.com/container-platform/3.3/dev_guide/builds.html#source-secrets
+$ oc secrets new-sshauth sshsecret --ssh-privatekey=$HOME/.ssh/id_rsa
+$ oc secrets link builder basicsecret
+$ oc set build-secret --source bc/sample-build basicsecret
+
+
+apiVersion: "v1"
+kind: "BuildConfig"
+metadata:
+  name: "sample-build"
+spec:
+  output:
+    to:
+      kind: "ImageStreamTag"
+      name: "sample-image:latest"
+  source:
+    git:
+      uri: "https://github.com/user/app.git"
+    sourceSecret:
+      name: "basicsecret"
+    type: "Git"
+  strategy:
+    sourceStrategy:
+      from:
+        kind: "ImageStreamTag"
+        name: "python-33-centos7:latest"
+    type: "Source"
+

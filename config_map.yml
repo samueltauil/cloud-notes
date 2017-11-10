@@ -1,0 +1,9 @@
+piVersion: v1
+kind: ConfigMap
+metadata:
+  name: ex-config
+data:
+  NODE_ENV: production
+  COUCH_DB_URI: http://couchdb.svc.cluster.local:5984
+  COUCH_DB_USERNAME: admin
+  COUCH_DB_PASSWORD: password

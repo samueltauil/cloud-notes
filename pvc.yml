@@ -1,0 +1,24 @@
+apiVersion: v1
+kind: PersistentVolumeClaim
+metadata:
+  creationTimestamp: 2016-07-26T21:39:18Z
+  labels:
+    template: gogs-template
+  name: gogs
+  namespace: ci
+  resourceVersion: "12679"
+  selfLink: /api/v1/namespaces/ci/persistentvolumeclaims/gogs
+  uid: 6847d982-5379-11e6-b759-2cc26018a0c2
+spec:
+  accessModes:
+  - ReadWriteOnce
+  resources:
+    requests:
+      storage: 1Gi
+  volumeName: vol5-pv
+status:
+  accessModes:
+  - ReadWriteOnce
+  capacity:
+    storage: 1Gi
+  phase: Bound

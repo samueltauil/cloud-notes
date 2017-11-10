@@ -1,0 +1,41 @@
+subscription-manager register --username=stauil1@redhat.com --password=S@muel123
+
+subscription-manager attach --pool=8a85f981568e999d01568ed2241a67c2
+
+subscription-manager repos --disable="*"
+
+subscription-manager repos \
+    --enable="rhel-7-server-rpms" \
+    --enable="rhel-7-server-extras-rpms" \
+    --enable="rhel-7-server-ose-3.2-rpms"
+
+yum install wget git net-tools bind-utils iptables-services bridge-utils bash-completion
+yum update
+
+yum install atomic-openshift-utils
+
+yum install docker-1.10.3
+
+cat <<EOF > /etc/sysconfig/docker-storage-setup
+DEVS=/dev/sdb
+VG=docker-vg
+EOF
+
+
+Edit the /etc/sysconfig/docker file and add --insecure-registry 172.30.0.0/16 to the OPTIONS parameter. For example:
+
+OPTIONS='--selinux-enabled --insecure-registry 172.30.0.0/16'
+
+ansible-playbook /usr/share/ansible/openshift-ansible/playbooks/byo/config.yml
+
+SSH to master and execute following
+htpasswd -c /etc/origin/master/htpasswd admin #set password
+oc edit nodes/cloud.i63.io # make the value of unschedulable to false
+oc policy add-role-to-user admin admin -n default # give permission on default project to admin
+oc policy add-role-to-user admin admin -n openshift # give permission on openshift project to admin
+oadm registry # creates a registry
+oadm router # creates a openshift-haproxy router
+
+oadm manage-node master.192.168.56.101.xip.io --schedulable=true
+
+oc get services -n default

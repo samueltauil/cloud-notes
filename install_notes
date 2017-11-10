@@ -1,0 +1,132 @@
+install idm
+yum install ipa-server bind bind-dyndb-ldap
+yum install haveged
+
+dig <node_hostname> @<IP_address> +short
+
+
+subscription-manager register --username=stauil1@redhat.com --password=S@muel123
+subscription-manager list --available
+subscription-manager attach --pool=8a85f981568e999d01568ed2241a67c2
+subscription-manager repos --disable="*"
+subscription-manager repos \
+    --enable="rhel-7-server-rpms" \
+    --enable="rhel-7-server-extras-rpms" \
+    --enable="rhel-7-server-ose-3.3-rpms"
+
+yum install -y atomic-openshift-utils
+
+yum install docker-1.10.3
+
+sed -i '/OPTIONS=.*/c\OPTIONS="--selinux-enabled --insecure-registry 172.30.0.0/16"' \
+/etc/sysconfig/docker
+
+
+vgcreate docker-registry /dev/sdb
+
+cat <<EOF > /etc/sysconfig/docker-storage-setup
+VG=docker-registry
+EOF
+
+
+mkdir .ssh 
+chmod 700 .ssh 
+cd .ssh 
+touch authorized_keys 
+chmod 600 authorized_keys 
+
+for host in master.ose.tauil.org \
+    infra.ose.tauil.org \
+    node01.ose.tauil.org \
+    node02.ose.tauil.org; \
+    do ssh-copy-id -i ~/.ssh/id_rsa.pub $host; \
+    done
+
+for host in 10.0.0.5 10.0.0.6 10.0.0.7 10.0.0.8 10.0.0.9 10.0.0.10 10.0.0.11; do ssh-copy-id -i ~/.ssh/id_rsa.pub $host; done
+
+for host in master.ocp.example.com \
+    infra.ocp.example.com \
+    node01.ocp.example.com \
+    node02.ocp.example.com; \
+    do ssh-copy-id -i ~/.ssh/id_rsa.pub $host; \
+    done
+
+cat <<EOF > /etc/sysconfig/docker-storage-setup
+DEVS=/dev/sdb
+VG=docker-vg
+EOF
+
+
+    https://docs.openshift.com/enterprise/latest/install_config/configuring_gce.html#install-config-configuring-gce
+    https://docs.openshift.com/enterprise/latest/install_config/persistent_storage/persistent_storage_gce.html#install-config-persistent-storage-persistent-storage-gce
+
+    r3dh4t1!
+
+    acl "trusted" {
+        10.0.1.5;    
+        10.0.1.6;    
+        10.0.1.7;  
+        10.0.1.8;  
+};
+
+; name servers - A records
+infra.ocp.example.com.          IN      A     10.0.1.5
+
+
+; 10.0.0.0/16 - A records
+master.ocp.example.com.        IN      A      10.0.1.6
+node01.ocp.example.com.        IN      A      10.0.1.7
+node02.ocp.example.com.        IN      A      10.0.1.8
+
+
+@       IN      SOA     infra.ocp.example.com. admin.ocp.example.com. (
+                              1         ; Serial
+                         604800         ; Refresh
+                          86400         ; Retry
+                        2419200         ; Expire
+                         604800 )       ; Negative Cache TTL
+; name servers
+      IN      NS      infra.ocp.example.com.
+
+
+; PTR Records
+5.1   IN      PTR     infra.ocp.example.com.     ; 10.0.1.5
+6.1   IN      PTR     master.ocp.example.com.    ; 10.0.1.6
+7.1   IN      PTR     node01.ocp.example.com.    ; 10.0.1.7
+8.1   IN      PTR     node02.ocp.example.com.    ; 10.0.1.8
+
+
+on /etc/resolv.conf
+search ocp.example.com  
+nameserver 10.0.1.5  
+
+
+[root@infra ~]# firewall-cmd --permanent --add-port=53/tcp
+success
+[root@infra ~]# firewall-cmd --permanent --add-port=53/udp
+success
+[root@infra ~]# firewall-cmd --reload
+success
+
+ansible-playbook -i /etc/ansible/hosts /usr/share/ansible/openshift-ansible/playbooks/adhoc/uninstall.yml
+
+
+
+https://github.com/sborenst/ansible_aws_deployer/tree/opentlc-shared-reorg
+master.na.openshift.opentlc.com
+https://master.na.openshift.opentlc.com
+https://github.com/redhat-gpe/OPEN_Admin/tree/master/OPENTLC-OCP3
+https://github.com/redhat-gpe/OPEN_Admin/blob/master/OPENTLC-OCP3/provision-ose-projects.sh
+
+
+https://github.com/sborenst/ansible_aws_deployer/tree/opentlc-shared-reorg
+master.na.openshift.opentlc.com
+https://master.na.openshift.opentlc.com
+https://github.com/redhat-gpe/OPEN_Admin/tree/master/OPENTLC-OCP3
+https://github.com/redhat-gpe/OPEN_Admin/blob/master/OPENTLC-OCP3/provision-ose-projects.sh
+https://github.com/redhat-gpe/ocp_fastrax
+https://github.com/RedHatWorkshops/openshiftv3-workshop
+https://github.com/samueltauil/ab-deploy
+https://github.com/samueltauil/pipelines
+https://github.com/samueltauil/bluegreen
+https://github.com/samueltauil/nexus

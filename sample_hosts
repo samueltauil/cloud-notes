@@ -1,0 +1,64 @@
+# Create an OSEv3 group that contains the masters and nodes groups
+[OSEv3:children]
+masters
+nodes
+ 
+# Set variables common for all OSEv3 hosts
+[OSEv3:vars]
+# SSH user, this user should allow ssh based auth without requiring a password
+ansible_ssh_user=root
+debug_level=5
+ 
+# If ansible_ssh_user is not root, ansible_sudo must be set to true
+#ansible_sudo=true
+ 
+deployment_type=openshift-enterprise
+openshift_master_default_subdomain=osepoc.epg.nam.gm.com
+ 
+# Global Proxy Configuration
+# These options configure HTTP_PROXY, HTTPS_PROXY, and NOPROXY environment
+# variables for docker and master services.
+# openshift_http_proxy=http://USER:PASSWORD@IPADDR:PORT
+# openshift_https_proxy=https://USER:PASSWORD@IPADDR:PORT
+# openshift_no_proxy='.cx.internal.cloudapp.net'
+ 
+ 
+# These options configure the BuildDefaults admission controller which injects
+# environment variables into Builds. These values will default to their
+# corresponding values above but you may set them independently. See BuildDefaults
+# documentation at https://docs.openshift.org/latest/admin_guide/build_defaults_overrides.html
+#openshift_builddefaults_http_proxy=openshift_http_proxy
+#openshift_builddefaults_https_proxy=openshift_https_proxy
+#openshift_builddefaults_no_proxy=openshift_noproxy
+#openshift_builddefaults_git_http_proxy=openshift_builddefaults_http_proxy
+#openshift_builddefaults_git_https_proxy=openshift_builddefaults_https_proxy
+ 
+ 
+#Defaults to 172.30.0.0/16. This network block should be a private block and must not conflict with any existing
+#networks blocks in your infrastructure to which pods, nodes, or the master may require access.
+#openshift_master_portal_net=172.30.0.0/16
+ 
+ 
+#This variable overrides the SDN cluster network CIDR block. This is the network from which pod IPs are assigned.
+#This network block should be a private block and must not conflict with existing network blocks in your infrastructure:q
+#to which pods, nodes, or the master may require access. Defaults to 10.1.0.0/16
+osm_cluster_network_cidr=172.27.0.0/16
+ 
+ 
+#This variable specifies the size of the per host subnet allocated for pod IPs by OpenShift SDN
+#Default to 8
+#osm_host_subnet_length=8
+ 
+ 
+# uncomment the following to enable htpasswd authentication; defaults to DenyAllPasswordIdentityProvider
+openshift_master_identity_providers=[{'name': 'htpasswd_auth', 'login': 'true', 'challenge': 'true', 'kind': 'HTPasswdPasswordIdentityProvider', 'filename': '/etc/origin/master/htpasswd'}]
+# host group for masters
+[masters]
+master1.cx.internal.cloudapp.net openshift_hostname=master1.cx.internal.cloudapp.net openshift_ip=10.25.71.27
+ 
+ 
+# host group for nodes, includes region info
+[nodes]
+master1.cx.internal.cloudapp.net openshift_hostname=master1.cx.internal.cloudapp.net openshift_ip=10.25.71.27 openshift_node_labels="{'region': 'infra', 'zone': 'default'}"
+node1.cx.internal.cloudapp.net openshift_hostname=node1.cx.internal.cloudapp.net openshift_ip=10.25.71.28 openshift_node_labels="{'region': 'primary', 'zone': 'east'}"
+node2.cx.internal.cloudapp.net openshift_hostname=node2.cx.internal.cloudapp.net openshift_ip=10.25.71.30 openshift_node_labels="{'region': 'primary', 'zone': 'west’}”

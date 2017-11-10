@@ -1,0 +1,18 @@
+DNS wildcard config
+-------------------
+
+yum -y install ipa-server bind bind-dyndb-ldap
+
+edit /etc/hosts to add the fully domain name:
+192.168.53.2 ipa.mydomain.com ipa
+
+ipa-server-install
+
+kinit admin
+
+ipa dnsrecord-add ocpdomain.com *.apps --a-rec 192.168.56.2
+ipa dnsrecord-add ocpdomain.com alngtslab15 --a-rec 192.168.56.3
+
+nslookup test.apps.ocpdomain.com
+
+

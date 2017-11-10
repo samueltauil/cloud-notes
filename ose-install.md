@@ -1,5 +1,0 @@
-OpenShift Install
-======
-
-
-## Pre-requesites

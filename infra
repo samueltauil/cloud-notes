@@ -1,0 +1,43 @@
+infra 
+10.2.2.105
+192.168.56.103
+
+master01 
+10.2.2.104
+192.168.56.102
+
+master02 
+10.2.2.101
+192.168.56.104
+
+node01
+10.2.2.102
+
+node02
+10.2.2.103
+
+
+ VBoxManage dhcpserver modify --netname NatNetwork --ip 10.2.2.100 --netmask 255.255.255.0 --lowerip 10.2.2.101 --upperip 10.2.2.254 --enable
+
+
+
+Setup complete
+
+Next steps:
+	1. You must make sure these network ports are open:
+		TCP Ports:
+		  * 80, 443: HTTP/HTTPS
+		  * 389, 636: LDAP/LDAPS
+		  * 88, 464: kerberos
+		  * 53: bind
+		UDP Ports:
+		  * 88, 464: kerberos
+		  * 53: bind
+		  * 123: ntp
+
+[root@infra ~]# firewall-cmd --permanent --add-port=53/tcp
+success
+[root@infra ~]# firewall-cmd --permanent --add-port=53/udp
+success
+[root@infra ~]# firewall-cmd --reload
+success

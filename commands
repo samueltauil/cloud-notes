@@ -1,0 +1,15 @@
+	docker pull docker.io/centos
+oc get svc -n default
+docker tag docker.io/centos <docker-registry service ip:port>/openshift/centos
+docker push <docker-registry service ip:port>/openshift/centos
+
+oc new-build https://github.com/samueltauil/openshift-webclient --strategy=docker --name=webconsole
+
+
+echo <<EOF > /etc/sysconfig/docker-storage-setup
+VG=docker-registry
+SETUP_LVM_THIN_POOL=yes
+EOF
+
+
+echo '{"kind":"ServiceAccount","apiVersion":"v1","metadata":{"name":"registry"}}' | oc create -f -
