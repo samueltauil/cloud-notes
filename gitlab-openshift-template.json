@@ -17,7 +17,7 @@
       "description": "The name for the application. The service will be named like the application.",
       "displayName": "Application name.",
       "name": "APPLICATION_NAME",
-      "value": "gitlab-ce"
+      "value": "gitlab"
     },
     {
       "description": "Hostname for service routes. Set this in order to have the GitLab display the correct clone urls.",
