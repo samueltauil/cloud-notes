@@ -1,6 +1,6 @@
 subscription-manager register --username=stauil1@redhat.com --password=S@muel123
 
-subscription-manager attach --pool=8a85f981568e999d01568ed2241a67c2
+subscription-manager attach --pool=8a85f98260c27fc50160c32cc4365ccb
 
 subscription-manager repos --disable="*"
 
